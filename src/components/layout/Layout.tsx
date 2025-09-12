@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import { PersonaIndicator } from '../auth/PersonaIndicator'
 import { 
   Building2, 
   Home, 
@@ -20,7 +21,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const { user, signOut } = useAuth()
+  const { user, persona, loginName, signOut, switchPersona } = useAuth()
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -130,6 +131,16 @@ export function Layout({ children }: LayoutProps) {
               ))}
             </nav>
             <div className="flex-shrink-0 border-t border-slate-700 p-4">
+              {/* Persona Indicator */}
+              {persona && (
+                <PersonaIndicator
+                  persona={persona}
+                  loginName={loginName}
+                  onSwitchPersona={switchPersona}
+                />
+              )}
+              
+              {/* User Profile */}
               <div className="flex items-center bg-slate-800 rounded-xl p-3 hover:bg-slate-700 transition-colors">
                 <div className="flex-shrink-0">
                   <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
