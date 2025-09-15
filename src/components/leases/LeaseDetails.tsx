@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import type { LeaseWithDetails } from './LeasesPage'
+import type { LeaseWithDetails } from './LeasesPage' 
 
 // Import the new hook
 import { useLeaseCalculations } from '../../hooks/useLeaseCalculations'; 
