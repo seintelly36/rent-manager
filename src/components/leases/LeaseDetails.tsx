@@ -5,6 +5,7 @@ import { format, differenceInDays, addDays, addWeeks, addMonths, addYears, addHo
 import { formatPeriodDuration, getRentLabel } from '../../lib/periodCalculations'
 import type { LeaseWithDetails } from './LeasesPage'
 import type { Payment, RpcResponse } from '../../lib/types'
+import { useLeaseCalculations } from '../../hooks/useLeaseCalculations'; // Adjust path 
 
 import { LeaseInfoHeader } from './components/LeaseInfoHeader';
 import { FinancialSummary } from './components/FinancialSummary'; 
