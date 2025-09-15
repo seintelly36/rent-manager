@@ -8,6 +8,7 @@ import type { Payment, RpcResponse } from '../../lib/types'
 
 import { LeaseInfoHeader } from './components/LeaseInfoHeader';
 import { FinancialSummary } from './components/FinancialSummary'; 
+import { PaymentSchedule } from './components/PaymentSchedule';
 
 interface LeaseDetailsProps {
   lease: LeaseWithDetails
