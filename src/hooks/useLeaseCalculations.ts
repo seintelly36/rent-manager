@@ -1,7 +1,7 @@
 // hooks/useLeaseCalculations.ts
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../../lib/supabase'
+import { supabase } from '../lib/supabase'
 import { differenceInDays, addDays, addWeeks, addMonths, addYears, addHours, addMinutes } from 'date-fns'
 import type { LeaseWithDetails } from '../LeasesPage'
 import type { Payment, RpcResponse } from '../../lib/types'
