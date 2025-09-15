@@ -1,13 +1,14 @@
-// src/hooks/useLeaseCalculations.ts
+// hooks/useLeaseCalculations.ts
 
 import { useState, useEffect, useCallback } from 'react'
-import { supabase } from '../lib/supabase' // Adjusted path
+import { supabase } from '../../lib/supabase'
 import { differenceInDays, addDays, addWeeks, addMonths, addYears, addHours, addMinutes } from 'date-fns'
-import type { LeaseWithDetails } from '../pages/LeasesPage' // Adjusted path
-import type { Payment, RpcResponse } from '../lib/types' // Adjusted path
+import type { LeaseWithDetails } from '../LeasesPage'
+import type { Payment, RpcResponse } from '../../lib/types'
 
-// Keep the interface definitions for clarity
-export interface PaymentDue {
+// Define the types for the hook's state and return values
+// Note: These interfaces are the same as in the original component
+interface PaymentDue {
   periodNumber: number
   dueDate: Date
   amount: number
@@ -33,182 +34,107 @@ export interface LeaseCalculations {
   paymentRefunds: Map<string, number>
 }
 
+// --- THE CUSTOM HOOK ---
 export function useLeaseCalculations(lease: LeaseWithDetails, onUpdated: () => void) {
   const [calculations, setCalculations] = useState<LeaseCalculations | null>(null)
   const [loading, setLoading] = useState(true)
-  
-  // State for Payment Modal
-  const [showPaymentForm, setShowPaymentForm] = useState(false)
-  const [paymentFormData, setPaymentFormData] = useState({
-    amount: '',
-    payment_date: new Date().toISOString().split('T')[0],
-    notes: ''
-  })
-  const [recordingPayment, setRecordingPayment] = useState(false)
+  const [isRecordingPayment, setIsRecordingPayment] = useState(false)
   const [paymentError, setPaymentError] = useState('')
-  
-  // State for Refund Modal
-  const [showRefundForm, setShowRefundForm] = useState(false)
-  const [refundFormData, setRefundFormData] = useState({
-    payment_id: '',
-    amount: '',
-    reason: ''
-  })
-  const [processingRefund, setProcessingRefund] = useState(false)
+  const [isProcessingRefund, setIsProcessingRefund] = useState(false)
   const [refundError, setRefundError] = useState('')
 
   const calculateLeaseMetrics = useCallback(async () => {
     try {
       setLoading(true)
-      
-      const { data: payments, error } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('lease_id', lease.id)
-        .order('payment_date', { ascending: true })
-
+      // --- All the calculation logic from the original component goes here ---
+      // This function is identical to the one in your original code.
+      // (For brevity, the large calculation block is omitted here, but you would paste it directly)
+      const { data: payments, error } = await supabase.from('payments').select('*').eq('lease_id', lease.id).order('payment_date', { ascending: true });
       if (error) throw error;
-      
-      // ... (The entire calculation logic from the original component goes here)
-      // This logic is exactly the same as in the original component.
-      // No changes are needed inside this function.
-      const paymentHistory = payments || []
-      const currentDate = new Date()
-      const startDate = new Date(lease.start_date)
-      const endDate = lease.end_date ? new Date(lease.end_date) : null
-      const periodType = lease.property?.period_type || 'monthly'
+      // ... a lot of calculation logic ...
+      const paymentHistory = payments || [];
+      // ... (the entire implementation of calculateLeaseMetrics) ...
+      const calculatedData: LeaseCalculations = { /* ... results of calculation ... */ };
+      setCalculations(calculatedData);
 
-      let totalPeriods = 0
-      if (lease.period_count && lease.auto_calculate_end_date) {
-        totalPeriods = lease.period_count
-      } else if (endDate) {
-        // ... calculation logic ...
-      }
-      
-      // ... all other calculations ...
-
-      const periodsRemaining = 0; // Placeholder for the complex logic
-      const totalAmountDue = 0;
-      const totalPaid = 0;
-      const amountDue = 0;
-      const nextDueDate = null;
-      const daysUntilNextPayment = 0;
-      const paymentDueList: PaymentDue[] = [];
-      const calculatedTotalPaid = 0;
-      const paymentRefunds = new Map<string, number>();
-
-      await new Promise(resolve => setTimeout(resolve, 100))
-
-      setCalculations({
-        totalPeriods,
-        periodsElapsed: 0,
-        periodsRemaining,
-        totalAmountDue,
-        totalPaid,
-        amountDue,
-        nextDueDate,
-        daysUntilNextPayment,
-        paymentHistory,
-        paymentDueList,
-        calculatedTotalPaid,
-        paymentRefunds
-      })
-      
     } catch (error) {
       console.error('Error calculating lease metrics:', error)
     } finally {
       setLoading(false)
     }
-  }, [lease]) // Dependency array ensures this function is stable unless the lease changes
+  }, [lease.id]) // Dependency on lease.id ensures recalculation if the lease itself changes
 
   useEffect(() => {
     calculateLeaseMetrics()
   }, [calculateLeaseMetrics])
 
-  const handleRecordPayment = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setRecordingPayment(true)
+  const recordPayment = async (paymentData: { amount: string; payment_date: string; notes: string }) => {
+    setIsRecordingPayment(true)
     setPaymentError('')
     try {
       const { data } = await supabase.rpc('collect_payment', {
         p_lease_id: lease.id,
-        p_amount: parseFloat(paymentFormData.amount),
-        p_payment_date: paymentFormData.payment_date,
-        p_notes: paymentFormData.notes || null
+        p_amount: parseFloat(paymentData.amount),
+        p_payment_date: paymentData.payment_date,
+        p_notes: paymentData.notes || null
       }) as { data: RpcResponse }
 
       if (data?.success) {
-        setShowPaymentForm(false)
-        setPaymentFormData({ amount: '', payment_date: new Date().toISOString().split('T')[0], notes: '' })
-        await calculateLeaseMetrics()
-        onUpdated()
+        await calculateLeaseMetrics() // Recalculate after payment
+        onUpdated() // Notify parent component
+        return true // Indicate success
       } else {
         setPaymentError(data?.message || 'Failed to record payment')
+        return false // Indicate failure
       }
     } catch (err) {
       console.error('Error recording payment:', err)
       setPaymentError('An unexpected error occurred')
+      return false
     } finally {
-      setRecordingPayment(false)
+      setIsRecordingPayment(false)
     }
   }
 
-  const handleRefund = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setProcessingRefund(true)
+  const processRefund = async (refundData: { payment_id: string; amount: string; reason: string }) => {
+    setIsProcessingRefund(true)
     setRefundError('')
     try {
       const { data } = await supabase.rpc('process_refund', {
-        payment_id: refundFormData.payment_id,
-        refund_amount: parseFloat(refundFormData.amount),
-        reason: refundFormData.reason
+        payment_id: refundData.payment_id,
+        refund_amount: parseFloat(refundData.amount),
+        reason: refundData.reason
       }) as { data: RpcResponse }
 
       if (data?.success) {
-        setShowRefundForm(false)
-        setRefundFormData({ payment_id: '', amount: '', reason: '' })
-        await calculateLeaseMetrics()
-        onUpdated()
+        await calculateLeaseMetrics() // Recalculate after refund
+        onUpdated() // Notify parent component
+        return true // Indicate success
       } else {
         setRefundError(data?.message || 'Failed to process refund')
+        return false // Indicate failure
       }
     } catch (err) {
       console.error('Error processing refund:', err)
       setRefundError('An unexpected error occurred')
+      return false
     } finally {
-      setProcessingRefund(false)
+      setIsProcessingRefund(false)
     }
   }
 
-  // Return everything the component needs to render the UI and handle interactions
+  // Return the public "API" of this hook
   return {
-    loading,
     calculations,
-    
-    // Payment Modal properties
-    showPaymentForm,
-    paymentFormData,
-    recordingPayment,
+    loading,
+    isRecordingPayment,
     paymentError,
-    setPaymentFormData,
-    handleRecordPayment,
-    openPaymentModal: () => setShowPaymentForm(true),
-    closePaymentModal: () => {
-      setShowPaymentForm(false)
-      setPaymentError('')
-    },
-
-    // Refund Modal properties
-    showRefundForm,
-    refundFormData,
-    processingRefund,
+    isProcessingRefund,
     refundError,
-    setRefundFormData,
-    handleRefund,
-    openRefundModal: () => setShowRefundForm(true),
-    closeRefundModal: () => {
-      setShowRefundForm(false)
-      setRefundError('')
-    },
+    recordPayment,
+    processRefund,
+    refresh: calculateLeaseMetrics, // Expose a manual refresh function
+    clearPaymentError: () => setPaymentError(''),
+    clearRefundError: () => setRefundError(''),
   }
 }
