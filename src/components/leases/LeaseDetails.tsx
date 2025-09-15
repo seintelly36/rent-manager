@@ -6,7 +6,7 @@ import { formatPeriodDuration, getRentLabel } from '../../lib/periodCalculations
 import type { LeaseWithDetails } from './LeasesPage'
 import type { Payment, RpcResponse } from '../../lib/types'
 
-import { LeaseInfoHeader } from './components/LeaseInfoHeader';
+import { LeaseInfoHeader, FinancialSummary } from './components';
 
 interface LeaseDetailsProps {
   lease: LeaseWithDetails
