@@ -457,139 +457,19 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
       </div>
         {/* Refund Form Modal */}
         {showRefundForm && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">Process Refund</h3>
-                <button
-                  onClick={() => {
-                    setShowRefundForm(false)
-                    setRefundError('')
-                  }}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <form onSubmit={handleRefund} className="p-6 space-y-4">
-                {refundError && (
-                  <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                    {refundError}
-                  </div>
-                )}
-
-                <div>
-                  <label htmlFor="refund_payment" className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Payment to Refund *
-                  </label>
-                  <select
-                    id="refund_payment"
-                    required
-                    value={refundFormData.payment_id}
-                    onChange={(e) => {
-                      const payment = calculations?.paymentHistory.find(p => p.id === e.target.value)
-                      const refundedAmount = calculations?.paymentRefunds?.get(e.target.value) || 0
-                      const maxRefund = payment ? payment.amount - refundedAmount : 0
-                      setRefundFormData({ 
-                        ...refundFormData, 
-                        payment_id: e.target.value,
-                        amount: maxRefund > 0 ? maxRefund.toString() : ''
-                      })
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Select a payment</option>
-                    {calculations?.paymentHistory
-                      .filter(p => {
-                        if (p.type !== 'rent' || p.status !== 'paid') return false
-                        const refundedAmount = calculations.paymentRefunds?.get(p.id) || 0
-                        return refundedAmount < p.amount // Only show if not fully refunded
-                      })
-                      .map((payment) => (
-                        <option key={payment.id} value={payment.id}>
-                          ${payment.amount} - {format(new Date(payment.payment_date), 'MMM dd, yyyy')}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="refund_amount" className="block text-sm font-medium text-gray-700 mb-2">
-                    Refund Amount *
-                  </label>
-                  {refundFormData.payment_id && calculations?.paymentRefunds && (
-                    <div className="mb-2 text-sm text-gray-600">
-                      {(() => {
-                        const payment = calculations.paymentHistory.find(p => p.id === refundFormData.payment_id)
-                        const refundedAmount = calculations.paymentRefunds.get(refundFormData.payment_id) || 0
-                        const maxRefund = payment ? payment.amount - refundedAmount : 0
-                        return (
-                          <>
-                            Original: ${payment?.amount.toLocaleString() || 0} | 
-                            Already Refunded: ${refundedAmount.toLocaleString()} | 
-                            Max Refund: ${maxRefund.toLocaleString()}
-                          </>
-                        )
-                      })()}
-                    </div>
-                  )}
-                  <input
-                    id="refund_amount"
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    max={(() => {
-                      if (!refundFormData.payment_id || !calculations?.paymentRefunds) return undefined
-                      const payment = calculations.paymentHistory.find(p => p.id === refundFormData.payment_id)
-                      const refundedAmount = calculations.paymentRefunds.get(refundFormData.payment_id) || 0
-                      return payment ? payment.amount - refundedAmount : undefined
-                    })()}
-                    required
-                    value={refundFormData.amount}
-                    onChange={(e) => setRefundFormData({ ...refundFormData, amount: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="0.00"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="refund_reason" className="block text-sm font-medium text-gray-700 mb-2">
-                    Reason for Refund *
-                  </label>
-                  <textarea
-                    id="refund_reason"
-                    required
-                    value={refundFormData.reason}
-                    onChange={(e) => setRefundFormData({ ...refundFormData, reason: e.target.value })}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Reason for processing this refund..."
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowRefundForm(false)
-                      setRefundError('')
-                    }}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={processingRefund}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {processingRefund ? 'Processing...' : 'Process Refund'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <ProcessRefundModal
+            isOpen={showRefundForm}
+            onClose={() => {
+              setShowRefundForm(false);
+              setRefundError('');
+            }}
+            onSubmit={handleRefund}
+            formData={refundFormData}
+            setFormData={setRefundFormData}
+            isProcessing={processingRefund}
+            refundError={refundError}
+            calculations={calculations}
+          />
         )}
     </div>
   )
