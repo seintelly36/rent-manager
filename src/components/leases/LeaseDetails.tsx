@@ -11,6 +11,7 @@ import { FinancialSummary } from './components/FinancialSummary';
 import { PaymentSchedule } from './components/PaymentSchedule';
 import { PaymentHistory } from './components/PaymentHistory';
 import { LeaseTerms } from './components/LeaseTerms';
+import { RecordPaymentModal } from './components/RecordPaymentModal';
 
 interface LeaseDetailsProps {
   lease: LeaseWithDetails
