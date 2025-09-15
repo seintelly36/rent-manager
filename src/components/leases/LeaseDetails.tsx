@@ -10,6 +10,7 @@ import { LeaseInfoHeader } from './components/LeaseInfoHeader';
 import { FinancialSummary } from './components/FinancialSummary'; 
 import { PaymentSchedule } from './components/PaymentSchedule';
 import { PaymentHistory } from './components/PaymentHistory';
+import { LeaseTerms } from './components/LeaseTerms';
 
 interface LeaseDetailsProps {
   lease: LeaseWithDetails
