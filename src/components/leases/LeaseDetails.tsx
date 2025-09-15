@@ -12,6 +12,7 @@ import { PaymentSchedule } from './components/PaymentSchedule';
 import { PaymentHistory } from './components/PaymentHistory';
 import { LeaseTerms } from './components/LeaseTerms';
 import { RecordPaymentModal } from './components/RecordPaymentModal';
+import { ProcessRefundModal } from './components/ProcessRefundModal';
 
 interface LeaseDetailsProps {
   lease: LeaseWithDetails
