@@ -432,25 +432,7 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
 
           {/* Lease Terms */}
           {lease.terms && Object.keys(lease.terms).length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Lease Terms</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {lease.terms.lease_term && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Lease Term</p>
-                      <p className="text-gray-900">{lease.terms.lease_term}</p>
-                    </div>
-                  )}
-                  {lease.terms.notes && (
-                    <div className="md:col-span-2">
-                      <p className="text-sm font-medium text-gray-700">Notes</p>
-                      <p className="text-gray-900">{lease.terms.notes}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <LeaseTerms terms={lease.terms} />
           )}
         </div>
 
