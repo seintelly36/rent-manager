@@ -1,3 +1,5 @@
+understand this code
+
 import React, { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import { X, Calendar, DollarSign, User, MapPin, Clock, TrendingUp, CheckCircle, Plus, AlertCircle, RotateCcw } from 'lucide-react'
