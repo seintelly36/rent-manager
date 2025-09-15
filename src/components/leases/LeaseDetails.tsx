@@ -5,6 +5,7 @@ import { format, differenceInDays, addDays, addWeeks, addMonths, addYears, addHo
 import { formatPeriodDuration, getRentLabel } from '../../lib/periodCalculations'
 import type { LeaseWithDetails } from './LeasesPage'
 import type { Payment, RpcResponse } from '../../lib/types'
+
 import { LeaseInfoHeader } from './components/LeaseInfoHeader';
 
 interface LeaseDetailsProps {
