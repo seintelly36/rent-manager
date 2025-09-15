@@ -386,7 +386,21 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
 
         <div className="p-6 space-y-8">
           {/* Basic Information */}
-        
+          <div className="p-6 space-y-8">
+  <LeaseInfoHeader
+    tenantName={lease.tenant?.name}
+    tenantEmail={lease.tenant?.email}
+    propertyName={lease.property?.name}
+    propertyAddress={lease.property?.address}
+    startDate={lease.start_date}
+    endDate={lease.end_date}
+    periodCount={lease.period_count}
+    periodType={lease.property?.period_type}
+    monthlyRent={lease.monthly_rent}
+    securityDeposit={lease.security_deposit}
+    status={lease.status}
+    autoCalculateEndDate={lease.auto_calculate_end_date}
+  />
 
           {/* Financial Summary */}
           {calculations && (
