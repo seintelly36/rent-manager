@@ -422,62 +422,11 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
 
           {/* Payment History */}
           {calculations && calculations.paymentHistory.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Payment History</h3>
-                {lease.status === 'active' && (
-                  <button
-                    onClick={() => setShowRefundForm(true)}
-                    className="inline-flex items-center px-3 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors"
-                  >
-                    <RotateCcw className="w-4 h-4 mr-2" />
-                    Process Refund
-                  </button>
-                )}
-              </div>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {calculations.paymentHistory.map((payment) => (
-                  <div
-                    key={payment.id}
-                    className={`flex items-center justify-between p-4 rounded-lg ${
-                      payment.type === 'refund' ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        payment.status === 'paid' ? 'bg-green-500' :
-                        payment.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
-                      }`} />
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {payment.type === 'refund' ? '-$' : '$'}{Math.abs(payment.amount).toLocaleString()}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {format(new Date(payment.payment_date), 'MMM dd, yyyy')} • {payment.type}
-                        </p>
-                        {payment.notes && (
-                          <p className="text-xs text-gray-500">{payment.notes}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end space-y-1">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        payment.status === 'paid' ? 'bg-green-100 text-green-800' :
-                        payment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {payment.status}
-                      </span>
-                      {payment.type === 'refund' && (
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                          REFUND
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <PaymentHistory
+              paymentHistory={calculations.paymentHistory}
+              leaseStatus={lease.status}
+              onProcessRefundClick={() => setShowRefundForm(true)}
+            />
           )}
 
           {/* Lease Terms */}
