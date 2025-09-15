@@ -1,7 +1,7 @@
 import React from 'react';
 import { User, MapPin, Calendar, DollarSign, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
-import { formatPeriodDuration, getRentLabel } from '../../lib/periodCalculations'; // Adjust path if needed
+import { formatPeriodDuration, getRentLabel } from '../../../lib/periodCalculations'; // Adjust path if needed
 
 // Define the props (arguments) that this component will accept
 interface LeaseInfoHeaderProps {
