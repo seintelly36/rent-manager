@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { Calendar, DollarSign, MapPin, User, XCircle, Eye, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
-import { formatPeriodDuration, getRentLabel } from '../../lib/periodCalculations'
+import { formatPeriodDuration, getRentLabel } from '../../../lib/periodCalculations'
 import type { RpcResponse, Payment } from '../../lib/types'
 
 interface LeaseWithDetails {
