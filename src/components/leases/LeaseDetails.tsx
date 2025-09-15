@@ -406,91 +406,11 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
 
           {/* Financial Summary */}
           {calculations && (
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Financial Summary</h3>
-                {lease.status === 'active' && (
-                  <button
-                    onClick={() => setShowPaymentForm(true)}
-                    className="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Record Payment
-                  </button>
-                )}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <Clock className="w-5 h-5 text-blue-600 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-blue-800">Periods Elapsed</p>
-                      <p className="text-xl font-semibold text-blue-900">
-                        {calculations.periodsElapsed} / {calculations.totalPeriods === 0 ? '∞' : calculations.totalPeriods}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <DollarSign className="w-5 h-5 text-green-600 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-green-800">Total Paid</p>
-                      <p className="text-xl font-semibold text-green-900">${calculations.totalPaid.toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <TrendingUp className="w-5 h-5 text-yellow-600 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-yellow-800">Amount Due</p>
-                      <p className="text-xl font-semibold text-yellow-900">${calculations.amountDue.toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <Calendar className="w-5 h-5 text-purple-600 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-purple-800">Next Due</p>
-                      <p className="text-sm font-semibold text-purple-900">
-                        {calculations.nextDueDate 
-                          ? `${calculations.daysUntilNextPayment} days`
-                          : 'N/A'
-                        }
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <TrendingUp className="w-5 h-5 text-indigo-600 mr-2" />
-                    <div>
-                      <p className="text-sm font-medium text-indigo-800">Calculated Total</p>
-                      <p className="text-xl font-semibold text-indigo-900">${calculations.calculatedTotalPaid.toLocaleString()}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {calculations.nextDueDate && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Next payment due:</span> {format(calculations.nextDueDate, 'MMM dd, yyyy')}
-                    {calculations.daysUntilNextPayment < 0 && (
-                      <span className="ml-2 text-red-600 font-medium">
-                        ({Math.abs(calculations.daysUntilNextPayment)} days overdue)
-                      </span>
-                    )}
-                  </p>
-                </div>
-              )}
-            </div>
+             <FinancialSummary
+                calculations={calculations}
+                leaseStatus={lease.status}
+                onRecordPaymentClick={() => setShowPaymentForm(true)}
+              />
           )}
 
           {/* Complete Payment Schedule */}
