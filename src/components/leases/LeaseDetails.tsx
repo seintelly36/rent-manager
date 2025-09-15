@@ -416,7 +416,7 @@ export function LeaseDetails({ lease, onClose, onUpdated }: LeaseDetailsProps) {
 
           {/* Complete Payment Schedule */}
           {calculations && (
-            
+             <PaymentSchedule paymentDueList={calculations.paymentDueList} />
           )}
 
           {/* Payment History */}
