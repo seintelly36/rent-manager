@@ -10,6 +10,7 @@ import { PropertiesPage } from './components/properties/PropertiesPage'
 import { LeasesPage } from './components/leases/LeasesPage'
 import { PaymentsPage } from './components/payments/PaymentsPage'
 import { MaintenancePage } from './components/maintenance/MaintenancePage'
+import { PersonaManagement } from './components/persona/PersonaManagement'
 
 function AppContent() {
   const { 
@@ -58,6 +59,7 @@ function AppContent() {
           <Route path="/leases" element={<LeasesPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
           <Route path="/maintenance" element={<MaintenancePage />} />
+          <Route path="/persona-management" element={<PersonaManagement />} />
         </Routes>
       </Layout>
     </Router>

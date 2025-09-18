@@ -12,7 +12,8 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Settings
 } from 'lucide-react'
 
 interface LayoutProps {
@@ -66,6 +67,7 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Leases', href: '/leases', icon: FileText },
     { name: 'Maintenance', href: '/maintenance', icon: Wrench },
     { name: 'Payments', href: '/payments', icon: CreditCard },
+    ...(persona === 'admin' ? [{ name: 'Persona Management', href: '/persona-management', icon: Settings }] : []),
   ]
 
   const isActive = (href: string) => {
