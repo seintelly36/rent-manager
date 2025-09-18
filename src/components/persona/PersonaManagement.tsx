@@ -7,7 +7,7 @@ import type { RpcResponse } from '../../lib/types'
 interface StaffAccount {
   name: string
   created_at?: string
-}  
+}
 
 export function PersonaManagement() {
   const { persona } = useAuth()
