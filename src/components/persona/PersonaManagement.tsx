@@ -98,7 +98,7 @@ export function PersonaManagement() {
       const { data } = await supabase.rpc('update_rent_admin_password_with_old', {
         p_old_password: adminForm.oldPassword,
         p_new_password: adminForm.newPassword
-      }) as { data: RpcResponse }
+      }).single() as { data: RpcResponse }
 
       if (data?.success) {
         setSuccess('Admin password updated successfully')
@@ -136,9 +136,7 @@ export function PersonaManagement() {
         p_name: staffForm.name,
         p_password: staffForm.password
       }).single() as { data: RpcResponse }
-
-      console.log(data); 
-      console.log(data?.success);
+      
       if (data?.success) {
         setSuccess('Staff account created successfully')
         setShowStaffForm(false)
@@ -175,7 +173,7 @@ export function PersonaManagement() {
       const { data } = await supabase.rpc('update_rent_staff_password', {
         p_name: editingStaff!,
         p_new_password: staffForm.password
-      }) as { data: RpcResponse }
+      }).single() as { data: RpcResponse }
 
       if (data?.success) {
         setSuccess('Staff password updated successfully')
@@ -203,7 +201,7 @@ export function PersonaManagement() {
     try {
       const { data } = await supabase.rpc('delete_rent_staff_account', {
         p_name: staffName
-      }) as { data: RpcResponse }
+      }).single() as { data: RpcResponse }
 
       if (data?.success) {
         setSuccess('Staff account deleted successfully')
