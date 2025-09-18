@@ -135,7 +135,7 @@ export function PersonaManagement() {
       const { data } = await supabase.rpc('create_rent_staff_account', {
         p_name: staffForm.name,
         p_password: staffForm.password
-      }) as { data: RpcResponse }
+      }).single() as { data: RpcResponse }
 
       console.log(data); 
       console.log(data?.success);
