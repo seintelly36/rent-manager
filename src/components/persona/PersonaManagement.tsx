@@ -137,6 +137,7 @@ export function PersonaManagement() {
         p_password: staffForm.password
       }) as { data: RpcResponse }
 
+      console.log(data);
       console.log(data?.success);
       if (data?.success) {
         setSuccess('Staff account created successfully')
