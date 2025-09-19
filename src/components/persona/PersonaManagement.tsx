@@ -62,9 +62,17 @@ export function PersonaManagement() {
   const fetchStaffAccounts = async () => {
     try {
       setLoading(true)
-      // Since we don't have a direct function to list staff, we'll simulate it
-      // In a real implementation, you'd need a function to list staff accounts
-      setStaffAccounts([])
+      const { data, error } = await supabase.rpc('get_current_user_account_names_rent_mangement')
+      
+      if (error) throw error
+      
+      // Convert the array of names to staff account objects
+      const staffAccountsData = (data || []).map((name: string) => ({
+        name,
+        created_at: undefined // We don't have creation date from this function
+      }))
+      
+      setStaffAccounts(staffAccountsData)
     } catch (error) {
       console.error('Error fetching staff accounts:', error)
       setError('Failed to fetch staff accounts')
