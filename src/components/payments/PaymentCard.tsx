@@ -10,13 +10,8 @@ import {
   Mail, 
   MapPin,
   MessageSquareText,
-  RotateCcw,
-  Printer,
-  Download,
-  FileImage,
-  ChevronDown
+  RotateCcw
 } from 'lucide-react'
-import { useReceiptGenerator } from '../../hooks/useReceiptGenerator'
 import type { RpcResponse } from '../../lib/types'
 
 // Interface for the payment object, ensuring type safety
@@ -59,9 +54,7 @@ const statusStyles = {
 }
 
 export function PaymentCard({ payment, onUpdated }: PaymentCardProps) {
-  const { printReceipt, downloadReceiptPDF, downloadReceiptImage } = useReceiptGenerator()
   const [showRefundForm, setShowRefundForm] = useState(false)
-  const [showReceiptOptions, setShowReceiptOptions] = useState(false)
   const [refundAmount, setRefundAmount] = useState('')
   const [refundReason, setRefundReason] = useState('')
   const [processing, setProcessing] = useState(false)
@@ -98,35 +91,6 @@ export function PaymentCard({ payment, onUpdated }: PaymentCardProps) {
     }
   }
 
-  const handlePrintReceipt = async () => {
-    try {
-      await printReceipt(payment)
-      setShowReceiptOptions(false)
-    } catch (error) {
-      console.error('Error printing receipt:', error)
-      alert('Failed to print receipt')
-    }
-  }
-
-  const handleDownloadPDF = async () => {
-    try {
-      await downloadReceiptPDF(payment)
-      setShowReceiptOptions(false)
-    } catch (error) {
-      console.error('Error downloading PDF:', error)
-      alert('Failed to download PDF')
-    }
-  }
-
-  const handleDownloadImage = async () => {
-    try {
-      await downloadReceiptImage(payment)
-      setShowReceiptOptions(false)
-    } catch (error) {
-      console.error('Error downloading image:', error)
-      alert('Failed to download image')
-    }
-  }
   return (
     <>
       <div className={`bg-white p-4 rounded-lg shadow border ${
@@ -199,57 +163,13 @@ export function PaymentCard({ payment, onUpdated }: PaymentCardProps) {
       {/* Refund Button */}
       {canRefund && (
         <div className="mt-4 pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowRefundForm(true)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Process Refund
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Receipt Actions */}
-      {payment.status === 'paid' && (
-        <div className="mt-4 pt-3 border-t border-gray-200">
-          <div className="relative">
-            <button
-              onClick={() => setShowReceiptOptions(!showReceiptOptions)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors"
-            >
-              <Printer className="w-4 h-4" />
-              Receipt
-              <ChevronDown className={`w-4 h-4 transition-transform ${showReceiptOptions ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {showReceiptOptions && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[160px]">
-                <button
-                  onClick={handlePrintReceipt}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 first:rounded-t-lg"
-                >
-                  <Printer className="w-4 h-4" />
-                  Print Receipt
-                </button>
-                <button
-                  onClick={handleDownloadPDF}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                >
-                  <Download className="w-4 h-4" />
-                  Download PDF
-                </button>
-                <button
-                  onClick={handleDownloadImage}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 last:rounded-b-lg"
-                >
-                  <FileImage className="w-4 h-4" />
-                  Download Image
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => setShowRefundForm(true)}
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Process Refund
+          </button>
         </div>
       )}
 
